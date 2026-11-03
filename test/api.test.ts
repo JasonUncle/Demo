@@ -42,6 +42,39 @@ test("POST /todos creates a todo", async () => {
 
   const list = await fetch(`${baseUrl}/todos`);
   assert.equal(list.status, 200);
-  const todos = (await list.json()) as unknown[];
-  assert.equal(todos.length, 1);
+  const page = (await list.json()) as {
+    items: unknown[];
+    total: number;
+    limit: number;
+    offset: number;
+  };
+  assert.equal(page.total, 1);
+  assert.equal(page.items.length, 1);
+  assert.equal(page.limit, 20);
+  assert.equal(page.offset, 0);
+});
+
+test("GET /todos supports limit and offset", async () => {
+  resetStore();
+  for (const title of ["a", "b", "c"]) {
+    const res = await fetch(`${baseUrl}/todos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title }),
+    });
+    assert.equal(res.status, 201);
+  }
+  const res = await fetch(`${baseUrl}/todos?limit=1&offset=1`);
+  assert.equal(res.status, 200);
+  const page = (await res.json()) as {
+    items: { title: string }[];
+    total: number;
+    limit: number;
+    offset: number;
+  };
+  assert.equal(page.total, 3);
+  assert.equal(page.limit, 1);
+  assert.equal(page.offset, 1);
+  assert.equal(page.items.length, 1);
+  assert.equal(page.items[0]?.title, "b");
 });

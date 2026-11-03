@@ -16,8 +16,15 @@ Server listens on `http://localhost:3000` (or `PORT`).
 | Method | Path | Description |
 |--------|------|-------------|
 | `GET` | `/health` | `{ ok: true }` |
-| `GET` | `/todos` | list todos |
+| `GET` | `/todos` | paginated list `{ items, total, limit, offset }` — `?limit=20&offset=0` (max limit 100) |
 | `POST` | `/todos` | create `{ id, title, done }` — body: `{ "title": "..." }` |
+
+## Demo branches / 演示分支
+
+### `demo/bot-c-pagination` (this branch / 本分支)
+
+Bot C adds simple pagination to `GET /todos` via `limit` (default 20, max 100) and `offset` (default 0).  
+Bot C 为 `GET /todos` 增加简单分页：`limit`（默认 20，最大 100）与 `offset`（默认 0）。
 
 ## Live demo / 现场演示
 

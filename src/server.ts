@@ -37,7 +37,19 @@ export async function handleRequest(req: IncomingMessage, res: ServerResponse) {
   }
 
   if (method === "GET" && url.pathname === "/todos") {
-    return send(res, 200, todos);
+    const rawLimit = url.searchParams.get("limit");
+    const rawOffset = url.searchParams.get("offset");
+    let limit = rawLimit == null ? 20 : Number(rawLimit);
+    let offset = rawOffset == null ? 0 : Number(rawOffset);
+    if (!Number.isInteger(limit) || limit < 1) {
+      return send(res, 400, { error: "limit must be a positive integer" });
+    }
+    if (limit > 100) limit = 100;
+    if (!Number.isInteger(offset) || offset < 0) {
+      return send(res, 400, { error: "offset must be a non-negative integer" });
+    }
+    const items = todos.slice(offset, offset + limit);
+    return send(res, 200, { items, total: todos.length, limit, offset });
   }
 
   if (method === "POST" && url.pathname === "/todos") {
