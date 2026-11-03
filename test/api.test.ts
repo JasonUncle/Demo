@@ -35,13 +35,31 @@ test("POST /todos creates a todo", async () => {
     body: JSON.stringify({ title: "demo task" }),
   });
   assert.equal(res.status, 201);
-  const body = (await res.json()) as { id: string; title: string; done: boolean };
+  const body = (await res.json()) as {
+    id: string;
+    title: string;
+    done: boolean;
+    priority: string;
+  };
   assert.equal(body.title, "demo task");
   assert.equal(body.done, false);
+  assert.equal(body.priority, "normal");
   assert.ok(body.id);
 
   const list = await fetch(`${baseUrl}/todos`);
   assert.equal(list.status, 200);
   const todos = (await list.json()) as unknown[];
   assert.equal(todos.length, 1);
+});
+
+test("POST /todos accepts priority", async () => {
+  resetStore();
+  const res = await fetch(`${baseUrl}/todos`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title: "urgent", priority: "high" }),
+  });
+  assert.equal(res.status, 201);
+  const body = (await res.json()) as { priority: string };
+  assert.equal(body.priority, "high");
 });
