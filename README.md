@@ -17,7 +17,14 @@ Server listens on `http://localhost:3000` (or `PORT`).
 |--------|------|-------------|
 | `GET` | `/health` | `{ ok: true }` |
 | `GET` | `/todos` | list todos |
-| `POST` | `/todos` | create `{ id, title, done }` — body: `{ "title": "..." }` |
+| `POST` | `/todos` | create `{ id, title, done }` — body: `{ "title": "..." }` (max 20 creates / process) |
+
+## Demo branches / 演示分支
+
+### `demo/bot-b-rate-limit` (this branch / 本分支)
+
+Bot B adds a trivial in-memory rate-limit stub: `POST /todos` allows at most **20 creates per process**, then returns `429`.  
+Bot B 增加简易内存限流：进程内最多创建 20 条待办，超出返回 `429`。
 
 ## Live demo / 现场演示
 
