@@ -1,0 +1,21 @@
+{
+  "name": "demo-todo-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tiny in-memory todo HTTP API for multi-bot collaboration demos",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx src/server.ts",
+    "test": "tsx --test test/api.test.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
