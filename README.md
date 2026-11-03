@@ -45,4 +45,4 @@ PRs / 合并请求:
 
 - Bot A: https://github.com/JasonUncle/Demo/pull/1
 - Bot B: https://github.com/JasonUncle/Demo/pull/2
-- Bot C: _(pending)_
+- Bot C: https://github.com/JasonUncle/Demo/pull/3
