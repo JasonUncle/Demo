@@ -45,3 +45,22 @@ test("POST /todos creates a todo", async () => {
   const todos = (await list.json()) as unknown[];
   assert.equal(todos.length, 1);
 });
+
+test("POST /todos rate-limits after MAX_CREATES_PER_PROCESS", async () => {
+  const { MAX_CREATES_PER_PROCESS } = await import("../src/server.ts");
+  resetStore();
+  for (let i = 0; i < MAX_CREATES_PER_PROCESS; i++) {
+    const res = await fetch(`${baseUrl}/todos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: `t${i}` }),
+    });
+    assert.equal(res.status, 201);
+  }
+  const blocked = await fetch(`${baseUrl}/todos`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title: "overflow" }),
+  });
+  assert.equal(blocked.status, 429);
+});

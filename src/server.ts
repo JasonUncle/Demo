@@ -10,6 +10,10 @@ export type Todo = {
 const todos: Todo[] = [];
 let nextId = 1;
 
+/** Trivial in-memory create rate limit (demo stub). */
+export const MAX_CREATES_PER_PROCESS = 20;
+let createCount = 0;
+
 function readBody(req: IncomingMessage): Promise<string> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
@@ -41,6 +45,12 @@ export async function handleRequest(req: IncomingMessage, res: ServerResponse) {
   }
 
   if (method === "POST" && url.pathname === "/todos") {
+    if (createCount >= MAX_CREATES_PER_PROCESS) {
+      return send(res, 429, {
+        error: "rate limit exceeded",
+        limit: MAX_CREATES_PER_PROCESS,
+      });
+    }
     let payload: { title?: unknown };
     try {
       payload = JSON.parse((await readBody(req)) || "{}");
@@ -55,6 +65,7 @@ export async function handleRequest(req: IncomingMessage, res: ServerResponse) {
       title: payload.title.trim(),
       done: false,
     };
+    createCount += 1;
     todos.push(todo);
     return send(res, 201, todo);
   }
@@ -66,6 +77,7 @@ export async function handleRequest(req: IncomingMessage, res: ServerResponse) {
 export function resetStore() {
   todos.length = 0;
   nextId = 1;
+  createCount = 0;
 }
 
 const port = Number(process.env.PORT) || 3000;
