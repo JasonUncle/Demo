@@ -25,14 +25,17 @@ Collaboration narrative / 协作叙事:
 
 1. **Bot A** ships a feature on `demo/bot-a-priority` (todo priority).
 2. **Bot B** works in parallel on `demo/bot-b-rate-limit` (create rate-limit stub).
-3. A human / reviewer bot summarizes both open PRs.
+3. **Bot C** works in parallel on `demo/bot-c-pagination` (todos pagination).
+4. A human / reviewer bot summarizes the open PRs.
 
 Branches / 分支:
 
 - `demo/bot-a-priority`
 - `demo/bot-b-rate-limit`
+- `demo/bot-c-pagination`
 
 PRs / 合并请求:
 
 - Bot A: https://github.com/JasonUncle/Demo/pull/1
 - Bot B: https://github.com/JasonUncle/Demo/pull/2
+- Bot C: https://github.com/JasonUncle/Demo/pull/3
