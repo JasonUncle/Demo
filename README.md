@@ -17,7 +17,14 @@ Server listens on `http://localhost:3000` (or `PORT`).
 |--------|------|-------------|
 | `GET` | `/health` | `{ ok: true }` |
 | `GET` | `/todos` | list todos |
-| `POST` | `/todos` | create `{ id, title, done }` — body: `{ "title": "..." }` |
+| `POST` | `/todos` | create `{ id, title, done, priority }` — body: `{ "title": "...", "priority?": "low"|"normal"|"high" }` |
+
+## Demo branches / 演示分支
+
+### `demo/bot-a-priority` (this branch / 本分支)
+
+Bot A adds optional `priority?: "low" | "normal" | "high"` on todos (default `"normal"`).  
+Bot A 为待办增加可选 `priority` 字段，默认 `"normal"`。
 
 ## Live demo / 现场演示
 
