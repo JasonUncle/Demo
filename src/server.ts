@@ -1,11 +1,24 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { pathToFileURL } from "node:url";
 
+export type Priority = "low" | "normal" | "high";
+
 export type Todo = {
   id: string;
   title: string;
   done: boolean;
+  priority: Priority;
 };
+
+const PRIORITIES: readonly Priority[] = ["low", "normal", "high"];
+
+function parsePriority(value: unknown): Priority | null {
+  if (value === undefined) return "normal";
+  if (typeof value === "string" && (PRIORITIES as readonly string[]).includes(value)) {
+    return value as Priority;
+  }
+  return null;
+}
 
 const todos: Todo[] = [];
 let nextId = 1;
@@ -41,7 +54,7 @@ export async function handleRequest(req: IncomingMessage, res: ServerResponse) {
   }
 
   if (method === "POST" && url.pathname === "/todos") {
-    let payload: { title?: unknown };
+    let payload: { title?: unknown; priority?: unknown };
     try {
       payload = JSON.parse((await readBody(req)) || "{}");
     } catch {
@@ -50,10 +63,15 @@ export async function handleRequest(req: IncomingMessage, res: ServerResponse) {
     if (typeof payload.title !== "string" || !payload.title.trim()) {
       return send(res, 400, { error: "title is required" });
     }
+    const priority = parsePriority(payload.priority);
+    if (priority === null) {
+      return send(res, 400, { error: 'priority must be "low" | "normal" | "high"' });
+    }
     const todo: Todo = {
       id: String(nextId++),
       title: payload.title.trim(),
       done: false,
+      priority,
     };
     todos.push(todo);
     return send(res, 201, todo);
