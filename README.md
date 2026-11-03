@@ -32,7 +32,7 @@ Branches / 分支:
 - `demo/bot-a-priority`
 - `demo/bot-b-rate-limit`
 
-PRs / 合并请求: _(filled after open)_
+PRs / 合并请求:
 
-- Bot A: _(pending)_
-- Bot B: _(pending)_
+- Bot A: https://github.com/JasonUncle/Demo/pull/1
+- Bot B: https://github.com/JasonUncle/Demo/pull/2
